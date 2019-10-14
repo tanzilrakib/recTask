@@ -39,6 +39,9 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('landing') }}">{{ __('Enlist Info') }}</a>
+                        </li>
                         @guest
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -49,9 +52,6 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('landing') }}">{{ __('Enlist Info') }}</a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('info-list') }}">{{ __('Show List') }}</a>
                             </li>

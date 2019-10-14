@@ -4,58 +4,41 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Info;
+use App\Jobs\EnlistInfo;
 use Validator;
-use Session;
 
 class InfoController extends Controller
 {
     
-
+	// Returns landing page with enlisting form
 	protected function index()
     {
         return view('welcome');
     }
 
-
+    // Shows enlisted info to authed users
 	protected function showList()
     {	
     	$infoList = Info::paginate(2);
         return view('info-list')->with('infoList', $infoList );
     }
 
+
+    // Creates and enlists Info
     protected function enlistInfo(Request $request)
     {
-
+    	// Validates the request data
         $this->validate($request, [
             'name' => ['required', 'string', 'regex:/^[a-zA-Z]+(([\',. -][a-zA-Z ])?[a-zA-Z]*)*$/u', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'phone' => ['required', 'regex:/^[0-9\+]{1,}[0-9\-]{3,15}$/u', 'string','max:100'],
         ]);
 
-        if($this->createList($request->all())){
-			Session::flash('message', 'Info enlisted!'); 
-			Session::flash('alert-class', 'alert-success'); 
-        }
-        else{
-        	Session::flash('message', 'Failed to enlist info!'); 
-			Session::flash('alert-class', 'alert-danger'); 
-        }
+        // Triggers asynchronously queued job for list creation
+        EnlistInfo::dispatch($request->all());
 
+        // Returns back to the page
         return redirect()->route('landing');
     }
 
-    /**
-     * Create a list item after validation.
-     *
-     * @param  array  $data
-     * @return \App\Form
-     */
-    protected function createList(array $data)
-    {
-        return Info::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-        ]);
-    }
 }

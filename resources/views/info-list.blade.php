@@ -22,20 +22,28 @@
                     {{ session('status') }}
                 </div>
             @endif
-            @foreach ($infoList as $info)
-                
+            @if($infoList->isEmpty())
                 <div class="card mb-3">
-                  <div class="card-header">
-                    <span class="float-left">Name: {{ $info->name }}</span><span class="float-right">ID: {{ $info->id }}</span>
-                  </div>
                   <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Email: {{ $info->email }}</li>
-                    <li class="list-group-item">Phone: {{ $info->phone }}</li>
+                    <li class="list-group-item">No info.</li>
                   </ul>
                 </div>
-            @endforeach
-            
-            {{ $infoList->links() }}
+            @else
+                 @foreach ($infoList as $info)
+                    <div class="card mb-3">
+                      <div class="card-header">
+                        <span class="float-left">Name: {{ $info->name }}</span><span class="float-right">ID: {{ $info->id }}</span>
+                      </div>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Email: {{ $info->email }}</li>
+                        <li class="list-group-item">Phone: {{ $info->phone }}</li>
+                      </ul>
+                    </div>
+                @endforeach
+                
+                {{ $infoList->links() }}
+            @endif
+           
 
         </div>
     </div>
